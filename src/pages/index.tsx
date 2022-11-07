@@ -11,7 +11,8 @@ const Home: NextPage = () => {
   if (!isConnected) {
     return (
       <div className="public-content">
-        <img alt="futureX.xyz" className="h-40" src="/ticket.svg" />
+        <img alt="futureX.xyz" className="h-60" src="/ticket.svg" />
+        <br />
         <h1 className="text-center text-5xl text-white">
           <a className="font-bold text-transparent bg-clip-text bg-sky-400">Permissionless</a> Poaps
         </h1>
