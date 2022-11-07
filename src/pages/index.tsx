@@ -16,7 +16,7 @@ const Home: NextPage = () => {
       <div className="public-content">
         <img alt="futureX.xyz" className="h-40" src="/ticket.svg" />
         <h1 className="text-center text-5xl text-white">
-          <text className="font-bold">Permissionless</text> Poaps
+          <a className="font-bold">Permissionless</a> Poaps
         </h1>
         <p className="italic text-center text-2xl text-white">
           Create, mint, & view FuturePoaps

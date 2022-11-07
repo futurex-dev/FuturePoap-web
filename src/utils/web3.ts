@@ -7,14 +7,12 @@ export const { chains, provider, webSocketProvider } = configureChains(
   [
     chain.goerli,
     chain.mainnet,
-    // ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
-    //   ? [chain.goerli, chain.kovan, chain.rinkeby, chain.ropsten]
-    //   : []),
   ],
   [
-    alchemyProvider({
-      apiKey: process.env.goerli_APIKEY,
-    }),
+    // alchemyProvider({
+    //   apiKey: process.env.NEXT_PUBLIC_goerli_APIKEY,
+    // }),
+    publicProvider(),
     publicProvider(),
   ]
 );

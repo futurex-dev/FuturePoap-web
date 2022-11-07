@@ -41,8 +41,10 @@ const Collection: NextPage = () => {
         <button className="button-secondary">Pop Poap!</button>
       </header>
       <p className="font-medium text-lg text-white ml-16 mr-auto">
-        created by <text className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-purple-700">{collection?.nfts?.creator}</text>
-        - total {collection?.nfts?.length} Poaps
+        Created by <a className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-purple-700">{collection?.creator}</a>
+      </p>
+      <p className="font-medium text-lg text-white ml-16 mr-auto">
+        Total {collection?.nfts?.length} Poaps
       </p>
       <div className="flex items-center justify-center flex-wrap gap-4 mb-20 mt-4">
         {collection?.nfts?.map((nft) => (

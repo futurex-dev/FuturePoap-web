@@ -24,12 +24,15 @@ const CollectionCard = ({
       <div className="bg-teal-500 h-[2px] mt-[6px] w-full" />
       <section className="flex justify-between mt-4 mb-8">
         <div>
+          <img alt={name} src={nfts[0].awsUrl} className="h-20" />
+        </div>
+        <div>
           <p className="font-medium mb-1 text-gray-500 text-base">Creator</p>
           <p className="font-semibold text-white text-2xl">{true ? "Yes" : "Not you"}</p>
         </div>
         <div>
           <p className="font-medium mb-1 text-gray-500 text-base">Authorized</p>
-          <p className="font-semibold text-white text-2xl">False</p>
+          <p className="font-semibold text-white text-2xl">{authorized ? "Yes" : "No"}</p>
         </div>
         <div>
           <p className="font-medium mb-1 text-gray-500 text-base">#Holders</p>
@@ -44,14 +47,8 @@ const CollectionCard = ({
         >
           View
         </button>
-        {/* <button
-          className="button-primary-half"
-          disabled={isMinted}
-          onClick={handleMintButtonClick}
-        >
-          {isMinted ? "Minted" : "Mint"} */}
-        {/* </button> */}
       </div>
+
     </div >
   );
 };
