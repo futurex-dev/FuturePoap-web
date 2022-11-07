@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import type { NextPage } from "next";
-import { useConnectModal, ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 
 import { COLLECTIONS } from "../utils/constants";
@@ -9,17 +8,15 @@ import NFTCard from "../components/nft-card"
 
 const Home: NextPage = () => {
   const { isConnected } = useAccount();
-  const { openConnectModal } = useConnectModal();
-
   if (!isConnected) {
     return (
       <div className="public-content">
         <img alt="futureX.xyz" className="h-40" src="/ticket.svg" />
         <h1 className="text-center text-5xl text-white">
-          <a className="font-bold">Permissionless</a> Poaps
+          <a className="font-bold text-transparent bg-clip-text bg-sky-400">Permissionless</a> Poaps
         </h1>
         <p className="italic text-center text-2xl text-white">
-          Create, mint, & view FuturePoaps
+          Create, manage your on-chain event with FuturePoap
         </p>
 
       </div>
@@ -33,7 +30,7 @@ const Home: NextPage = () => {
       </header>
       <div className="flex items-center justify-center flex-wrap gap-4 mb-20 mt-4">
         {COLLECTIONS[0].nfts?.map((nft) => (
-          <NFTCard key={nft.id} nft={nft} />
+          <NFTCard key={nft.id} nft={nft} userViewing={true} />
         ))}
       </div>
       <header className="flex items-center justify-between mb-12 px-16 pt-7 w-full">

@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Head>
           <title>FuturePoap</title>
         </Head>
-        <div className="bg-gradient-to-b to-sky-500 from-sky-600 bg-cover min-h-screen">
+        <div className="bg-gradient-to-br to-sky-700 from-slate-700 bg-cover min-h-screen">
           <Header />
           <Component {...pageProps} />
         </div>

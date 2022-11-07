@@ -9,7 +9,7 @@ import { NFTCard } from "../../components";
 import { COLLECTIONS } from "../../utils/constants";
 
 const Collection: NextPage = () => {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const {
     query: { collectionId },
     push,
@@ -38,7 +38,10 @@ const Collection: NextPage = () => {
           </Link>{" "}
           / {collection?.name}{" "}
         </p>
-        <button className="button-secondary">Pop Poap!</button>
+        <div className="flex space-x-4">
+          <button className="button-outlined">Pop Poap!</button>
+          {(collection?.creator === address) ? (<button className="button-outlined">Edit minters</button>) : (<button className="button-outlined">Check minters</button>)}
+        </div>
       </header>
       <p className="font-medium text-lg text-white ml-16 mr-auto">
         Created by <a className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-purple-700">{collection?.creator}</a>
@@ -48,7 +51,7 @@ const Collection: NextPage = () => {
       </p>
       <div className="flex items-center justify-center flex-wrap gap-4 mb-20 mt-4">
         {collection?.nfts?.map((nft) => (
-          <NFTCard key={nft.id} nft={nft} />
+          <NFTCard key={nft.id} nft={nft} userViewing={false} />
         ))}
       </div>
     </main>

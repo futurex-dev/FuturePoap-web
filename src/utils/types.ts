@@ -1,5 +1,6 @@
 export interface NFT {
   id: number;
+  eventId: number;
   name: string;
   description?: string;
   awsUrl: string;
@@ -7,6 +8,7 @@ export interface NFT {
 
 export interface NFTCardProps {
   nft: NFT;
+  userViewing: boolean;
 }
 
 export interface Collection {
