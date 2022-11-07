@@ -1,19 +1,56 @@
-import { getDefaultWallets } from "@rainbow-me/rainbowkit";
+import { getDefaultWallets, Chain } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
-export const { chains, provider, webSocketProvider } = configureChains(
-  [
+const ENV = process.env.NODE_ENV;
+var setChains: any[];
+var setProviders: any[];
+if (ENV === 'development') {
+  console.log("It is on development mode")
+  const ganacheChain: Chain = {
+    id: 31337,
+    name: 'Ganache',
+    network: 'Ganache',
+    iconUrl: 'https://trufflesuite.com/img/ganache-feature-1-icon.svg',
+    iconBackground: '#fff',
+    nativeCurrency: {
+      decimals: 10,
+      name: 'Go',
+      symbol: 'Go',
+    },
+    rpcUrls: {
+      default: 'http://127.0.0.1:8545',
+    },
+    testnet: true,
+  };
+  setChains = [
     chain.goerli,
-    // chain.mainnet,
-  ],
-  [
+    ganacheChain
+  ];
+  setProviders = [
     alchemyProvider({
       apiKey: process.env.NEXT_PUBLIC_goerli_APIKEY,
     }),
-    // publicProvider(),
-  ]
+    jsonRpcProvider({ rpc: chain => ({ http: chain.rpcUrls.default }) }),
+  ];
+} else {
+  setChains = [
+    chain.goerli,
+  ];
+  setProviders = [
+    alchemyProvider({
+      apiKey: process.env.NEXT_PUBLIC_goerli_APIKEY,
+    }),
+  ];
+}
+
+
+
+export const { chains, provider, webSocketProvider } = configureChains(
+  setChains,
+  setProviders
 );
 
 const { connectors } = getDefaultWallets({
