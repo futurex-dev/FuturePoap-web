@@ -1,11 +1,13 @@
 <div align="center">
   <h1>Website for FuturePOAP</h1>
   <p>
+    <a href="https://futurepoap.vercel.app/">Live demo</a>
   </p>
 </div>
 
 
 
+The front-end codebase for FuturePoap.
 
 ## 🐺 How to run it yourself
 
