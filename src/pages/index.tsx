@@ -17,7 +17,7 @@ const Home: NextPage = () => {
           <a className="font-bold text-transparent bg-clip-text bg-sky-400">Permissionless</a> Poaps
         </h1>
         <p className="italic text-center text-2xl text-white">
-          Create, manage your on-chain event with FuturePoap
+          Create, manage your on-chain events with FuturePoap
         </p>
 
       </div>
