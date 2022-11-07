@@ -26,22 +26,27 @@ const Home: NextPage = () => {
 
   return (
     <main className="flex flex-col items-center justify-center mt-16 min-h-[75vh] w-full">
-      <header className="flex items-center justify-between mb-12 px-16 pt-7 w-full">
-        <p className="font-medium text-5xl text-white">Owned Poaps</p>
-      </header>
-      <div className="flex items-center justify-center flex-wrap gap-4 mb-20 mt-4">
-        {COLLECTIONS[0].nfts?.map((nft) => (
-          <NFTCard key={nft.id} nft={nft} userViewing={true} />
-        ))}
+      <div className="flex flex-col bg-black-opaque mb-10 rounded-md p-10 w-[90vw]">
+        <header className="flex items-center justify-between mb-12 px-16 pt-7 w-full">
+          <p className="font-medium text-5xl text-white">Owned Poaps</p>
+        </header>
+        <div className="flex items-center justify-center flex-wrap gap-4 mb-20 mt-4">
+          {COLLECTIONS[0].nfts?.map((nft) => (
+            <NFTCard key={nft.id} nft={nft} userViewing={true} />
+          ))}
+        </div>
       </div>
-      <header className="flex items-center justify-between mb-12 px-16 pt-7 w-full">
-        <p className="font-medium text-5xl text-white">Events</p>
-        <button className="button-outlined">New event</button>
-      </header>
-      <div className="flex flex-col gap-7 mb-20">
-        {COLLECTIONS.map((collection) => (
-          <CollectionCard key={collection.id} collection={collection} />
-        ))}
+
+      <div className="flex flex-col bg-black-opaque mb-10 rounded-md p-10 w-[90vw]">
+        <header className="flex items-center justify-between mb-12 px-16 pt-7 w-full">
+          <p className="font-medium text-5xl text-white">Events</p>
+          <button className="rounded-md	button-outlined">New event</button>
+        </header>
+        <div className="flex flex-col items-center gap-7 mb-20">
+          {COLLECTIONS.map((collection) => (
+            <CollectionCard key={collection.id} collection={collection} />
+          ))}
+        </div>
       </div>
     </main>
   );

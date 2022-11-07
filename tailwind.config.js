@@ -8,7 +8,6 @@ module.exports = {
     extend: {
       colors: {
         "black-opaque": "rgba(0, 0, 0, 0.67)",
-        "futureX-color": "rgba(13, 2, 39, 1)"
       },
     },
   },

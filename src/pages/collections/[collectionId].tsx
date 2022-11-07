@@ -39,8 +39,8 @@ const Collection: NextPage = () => {
           / {collection?.name}{" "}
         </p>
         <div className="flex space-x-4">
-          <button className="button-outlined">Pop Poap!</button>
-          {(collection?.creator === address) ? (<button className="button-outlined">Edit minters</button>) : (<button className="button-outlined">Check minters</button>)}
+          <button className="rounded-md button-outlined">Pop Poap!</button>
+          {(collection?.creator === address) ? (<button className="rounded-md button-outlined">Edit minters</button>) : (<button className="rounded-md button-outlined">Check minters</button>)}
         </div>
       </header>
       <p className="font-medium text-lg text-white ml-16 mr-auto">
