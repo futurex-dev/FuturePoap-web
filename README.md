@@ -1,35 +1,22 @@
-<h1 align="center">
- ⚡ <a href="https://holograph-tw-clone.vercel.app/">Holograph Next.js + TailwindCSS Clone<a> ⚫️
-</h1>
+<div align="center">
+  <h1>Website for FuturePOAP</h1>
+  <p>
+  </p>
+</div>
 
-### [Live Demo](https://holograph-tw-clone.vercel.app/) 💻
 
-![App Screenshot](https://res.cloudinary.com/dwrddgz8s/image/upload/v1660892065/Screen_Shot_2022-08-19_at_03.54.19_hnlymj.png)
-![App Screenshot](https://res.cloudinary.com/dwrddgz8s/image/upload/v1660892093/Screen_Shot_2022-08-19_at_03.54.47_vavxfr.png)
-![App Screenshot](https://res.cloudinary.com/dwrddgz8s/image/upload/v1660892119/Screen_Shot_2022-08-19_at_03.55.14_legmoi.png)
 
-## 🚀 Technologies
 
-This project has been developed with the following technologies:
-
-- [React](https://reactjs.org/) ⚛
-- [TypeScript](https://www.typescriptlang.org/) 💙
-- [Next.js](https://nextjs.org/) ⚡️
-- [Tailwind CSS](https://tailwindcss.com/) 💅
-- [Ethers.js](https://docs.ethers.io/v5/) 📈
-- [wagmi](https://wagmi.sh/) 🪙
-- [RainbowKit](https://www.rainbowkit.com/) 🌈
-
-## 🐺 How to run locally
+## 🐺 How to run it yourself
 
 From your command line:
 
 ```bash
 # Clone this repository
-$ git clone https://github.com/feliperodriguess/holograph-tw-clone.git
+$ git clone https://github.com/futurex-dev/FuturePoap-web
 
 # Go into the repository
-$ cd holograph-tw-clone
+$ cd FuturePoap-web
 
 # Install the dependencies
 $ npm i
@@ -40,4 +27,20 @@ $ npm run dev
 
 ---
 
-Made with 🖤 by Felipe Rodrigues [Get in touch!](https://www.linkedin.com/in/feliperodriguess/)
+* Thanks for the great website template from [hanok2](https://github.com/hanok2/holograph-tw-clone).
+
+* Thanks for the great projects:
+
+  - [React](https://reactjs.org/) ⚛
+
+  - [TypeScript](https://www.typescriptlang.org/) 💙
+
+  - [Next.js](https://nextjs.org/) ⚡️
+
+  - [Tailwind CSS](https://tailwindcss.com/) 💅
+
+  - [Ethers.js](https://docs.ethers.io/v5/) 📈
+
+  - [wagmi](https://wagmi.sh/) 🪙
+
+  - [RainbowKit](https://www.rainbowkit.com/) 🌈
