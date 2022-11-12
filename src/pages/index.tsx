@@ -1,13 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 import type { NextPage } from "next";
-import { useAccount } from "wagmi";
-
+import { useAccount, useSigner, useContract } from "wagmi";
+import { useRouter } from "next/router";
 import { COLLECTIONS } from "../utils/constants";
 import CollectionCard from "../components/collection-card";
 import NFTCard from "../components/nft-card"
 
 const Home: NextPage = () => {
   const { isConnected } = useAccount();
+  const { data: signer } = useSigner();
+  const router = useRouter();
+
+  const handleNewEventButtonClick = () => {
+    router.push("events/new");
+  };
+
   if (!isConnected) {
     return (
       <div className="public-content">
@@ -40,7 +47,7 @@ const Home: NextPage = () => {
       <div className="flex flex-col bg-black-opaque mb-10 rounded-md p-10 w-[90vw]">
         <header className="flex items-center justify-between mb-12 px-16 pt-7 w-full">
           <p className="font-medium text-5xl text-white">Events</p>
-          <button className="rounded-md	button-outlined">New event</button>
+          <button className="rounded-md	button-outlined" onClick={handleNewEventButtonClick}>New event</button>
         </header>
         <div className="flex flex-col items-center gap-7 mb-20">
           {COLLECTIONS.map((collection) => (

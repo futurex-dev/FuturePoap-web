@@ -16,7 +16,7 @@ const CollectionCard = ({
   };
 
   const handleViewNftsButtonClick = () => {
-    router.push(`/collections/${id}`);
+    router.push(`/events/${id}`);
   };
 
   const { address } = useAccount();
@@ -45,7 +45,7 @@ const CollectionCard = ({
       </section>
       <div className="flex items-center gap-4 justify-center flex-wrap">
         <button
-          className="button-outlined"
+          className="rounded-md button-outlined"
           onClick={handleViewNftsButtonClick}
         >
           View
