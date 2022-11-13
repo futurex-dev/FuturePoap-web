@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import { COLLECTIONS } from "../utils/constants";
 import CollectionCard from "../components/collection-card";
 import NFTCard from "../components/nft-card"
+import { TypeAnimation } from 'react-type-animation';
+
 
 const Home: NextPage = () => {
   const { isConnected } = useAccount();
@@ -21,7 +23,9 @@ const Home: NextPage = () => {
         <img alt="futureX.xyz" className="h-60" src="/ticket.svg" />
         <br />
         <h1 className="text-center text-5xl text-white">
-          <a className="font-bold text-transparent bg-clip-text bg-sky-400">Permissionless</a> Poaps
+          <span className="font-bold font-mono text-transparent bg-clip-text bg-sky-400">
+            <TypeAnimation sequence={['Permission', 2000, 'Permissionless', 5000]} wrapper="span" repeat={Infinity} cursor={true} />
+          </span>
         </h1>
         <p className="italic text-center text-2xl text-white">
           Create, manage your on-chain events with FuturePoap
