@@ -48,7 +48,7 @@ const Collection: NextPage = () => {
                 </div>
             </header>
 
-            <EventForm></EventForm>
+            <EventForm />
         </main>
     );
 };
