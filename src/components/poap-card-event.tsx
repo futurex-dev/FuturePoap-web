@@ -1,14 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { PoapCardEventProps } from "../utils/types";
 import { futurepoap_abi } from "../../futurepoap";
+import { emojiAvatarForAddress } from "../utils/emoji-avatar"
 import { useContractRead, useAccount } from "wagmi";
 import { Result } from "ethers/lib/utils";
 
-const PoapCard = ({ eventId, poapIndex }: PoapCardEventProps) => {
+const PoapCardEvent = ({ eventId, poapIndex }: PoapCardEventProps) => {
     const [isMinted, setIsMinted] = useState(false);
-
+    const [userAvatar, setUserAvatar] = useState({});
     const handleMintButtonClick = () => {
         setIsMinted(true);
     };
@@ -25,7 +26,13 @@ const PoapCard = ({ eventId, poapIndex }: PoapCardEventProps) => {
     })
 
     const showToken = !readLoading && !readError;
-    console.log(poapIndex);
+
+    useEffect(() => {
+        if (!readLoading && !readError && userAddress) {
+            setUserAvatar(emojiAvatarForAddress(userAddress.toString()));
+        }
+    }, [userAddress, readError, readLoading])
+    console.log(userAvatar)
     return (
         <div className="border-solid border-2 border-black-opaque bg-black-opaque w-[160px] rounded-md pb-6">
             {showToken &&
@@ -50,4 +57,4 @@ const PoapCard = ({ eventId, poapIndex }: PoapCardEventProps) => {
     );
 };
 
-export default PoapCard;
+export default PoapCardEvent;

@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import type { NextPage } from "next";
+import { useState, useEffect } from "react";
 import { useAccount, useSigner, useContractRead, useNetwork } from "wagmi";
 import { useRouter } from "next/router";
 import { COLLECTIONS } from "../utils/constants";
@@ -13,6 +14,7 @@ import { Result } from "ethers/lib/utils";
 
 const Home: NextPage = () => {
   const { isConnected, address } = useAccount();
+  const [balance, setBalance] = useState(1);
   const { chain } = useNetwork();
   const router = useRouter();
   const futurepoapConfig = {
@@ -24,7 +26,7 @@ const Home: NextPage = () => {
     functionName: 'balanceOf',
     args: [address as string]
   })
-
+  console.log("Balance", poapBalance);
   const handleNewEventButtonClick = () => {
     router.push("events/new");
   };
@@ -32,6 +34,13 @@ const Home: NextPage = () => {
   const erroring = balanceError;
   const loading = balanceLoading;
   const waiting = balanceLoading || erroring;
+  const indexArray = Array.from({ length: balance }, (item, index) => index);
+  // useEffect(() => {
+  //   if (!balanceError && !balanceLoading && poapBalance) {
+  //     setBalance((poapBalance as Result).toNumber());
+  //   }
+  // }, [poapBalance, balanceError, balanceLoading]);
+  // setBalance(2);
   if (!isConnected) {
     return (
       <div className="public-content">
@@ -63,24 +72,24 @@ const Home: NextPage = () => {
           />}
           {erroring && <p className="font-medium text-l text-red-300">{`Oops, unable to read from ${chain?.name}`}</p>}
         </div>}
-        {!waiting && <div className="flex items-center justify-center flex-wrap gap-4 mb-20 mt-4">
-          {Array(0, (poapBalance as Result).toNumber() - 1).map((poapIndex: number) => (
+        {(!waiting && (balance > 0)) && <div className="flex items-center justify-center flex-wrap gap-4 mb-20 mt-4">
+          {indexArray.map((poapIndex: number) => (
             <PoapCard key={poapIndex} userAccount={address as string} poapIndex={poapIndex} />
           ))}
         </div>}
       </div>
 
-      {/* <div className="flex flex-col bg-black-opaque mb-10 rounded-md p-10 w-[90vw]">
+      <div className="flex flex-col bg-black-opaque mb-10 rounded-md p-10 w-[90vw]">
         <header className="flex items-center justify-between mb-12 px-16 pt-7 w-full">
           <p className="font-medium text-5xl text-white">Events</p>
           <button className="rounded-md	button-outlined" onClick={handleNewEventButtonClick}>New event</button>
         </header>
         <div className="flex flex-col items-center gap-7 mb-20">
-          {COLLECTIONS.map((collection) => (
-            <CollectionCard key={collection.id} collection={collection} />
+          {(balance > 0) && indexArray.map((poapIndex) => (
+            <CollectionCard key={poapIndex} poapIndex={poapIndex} />
           ))}
         </div>
-      </div> */}
+      </div>
     </main>
   );
 };

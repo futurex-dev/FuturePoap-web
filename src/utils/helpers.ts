@@ -15,10 +15,13 @@ export const fetchIPFSJSON = async (ipfsURI: string) => {
   const resJSON = await axios({
     method: "get",
     url: ipfsHttps,
-    // headers: {
-    //     'pinata_api_key': `${process.env.NEXT_PUBLIC_PINATA_API_KEY}`,
-    //     'pinata_secret_api_key': `${process.env.NEXT_PUBLIC_PINATA_API_SECRET}`,
-    // },
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
+      'Access-Control-Allow-Credentials': true
+    },
+    responseType: 'json'
   });
   return resJSON;
 };

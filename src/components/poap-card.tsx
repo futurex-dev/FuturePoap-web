@@ -8,7 +8,7 @@ import { useContractRead, useAccount } from "wagmi";
 import { Result } from "ethers/lib/utils";
 
 
-const PoapCardEvent = ({ userAccount, poapIndex }: PoapCardProps) => {
+const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
   const [eventName, setEventName] = useState("");
   const [eventImage, setEventImage] = useState("");
 
@@ -84,4 +84,4 @@ const PoapCardEvent = ({ userAccount, poapIndex }: PoapCardProps) => {
   );
 };
 
-export default PoapCardEvent;
+export default PoapCard;

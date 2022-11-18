@@ -25,7 +25,7 @@ export interface Collection {
 }
 
 export interface CollectionCardProps {
-  collection: Collection;
+  poapIndex: number;
 }
 
 export interface EventJSONData {
