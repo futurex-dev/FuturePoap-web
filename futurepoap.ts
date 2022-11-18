@@ -127,6 +127,25 @@ export const futurepoap_abi = [
                 "internalType": "uint256",
                 "name": "eventId",
                 "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "EventCreatorChanged",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "eventId",
+                "type": "uint256"
             }
         ],
         "name": "EventCreatorRemoved",

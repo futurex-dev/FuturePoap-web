@@ -5,9 +5,10 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
 
-import { NFTCard } from "../../components";
+import { PoapCardEvent } from "../../components";
 import { COLLECTIONS } from "../../utils/constants";
 
+// TODO add contract here
 const Collection: NextPage = () => {
   const { isConnected, address } = useAccount();
   const {
@@ -49,11 +50,11 @@ const Collection: NextPage = () => {
       <p className="font-medium text-lg text-white ml-16 mr-auto">
         Total {collection?.nfts?.length} Poaps
       </p>
-      <div className="flex items-center justify-center flex-wrap gap-4 mb-20 mt-4">
+      {/* <div className="flex items-center justify-center flex-wrap gap-4 mb-20 mt-4">
         {collection?.nfts?.map((nft) => (
-          <NFTCard key={nft.id} nft={nft} userViewing={false} />
+          <PoapCardEvent key={collectionId} eventId={collectionId} />
         ))}
-      </div>
+      </div> */}
     </main>
   );
 };

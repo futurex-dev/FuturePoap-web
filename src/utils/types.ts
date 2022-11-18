@@ -6,9 +6,14 @@ export interface NFT {
   awsUrl: string;
 }
 
-export interface NFTCardProps {
-  nft: NFT;
-  userViewing: boolean;
+export interface PoapCardProps {
+  userAccount: string;
+  poapIndex: number;
+}
+
+export interface PoapCardEventProps {
+  eventId: number;
+  poapIndex: number;
 }
 
 export interface Collection {
@@ -21,4 +26,11 @@ export interface Collection {
 
 export interface CollectionCardProps {
   collection: Collection;
+}
+
+export interface EventJSONData {
+  data: {
+    name: string;
+    image: string;
+  };
 }

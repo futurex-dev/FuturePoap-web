@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useAccount, useNetwork } from "wagmi";
-import { futurepoap_abi } from "../../../futurepoap";
 import EventForm from "../../components/event-form"
 
 const Collection: NextPage = () => {

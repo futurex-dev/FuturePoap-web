@@ -2,21 +2,78 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import {
+    useAccount,
+    useNetwork,
+    useContractWrite,
+    usePrepareContractWrite,
+    useWaitForTransaction
+} from 'wagmi';
+import { futurepoap_abi } from "../../futurepoap";
 import { BounceLoader } from 'react-spinners';
 import axios from "axios";
+import { config } from "dotenv";
 
+// TODO read event ID from event
 const EventForm = () => {
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [eventName, setEventName] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
-    const [eventId, setEventId] = useState(0);
+    // const [eventId, setEventId] = useState(0);
+    const [tokenURI, setTokenURI] = useState<string>("");
+    const [hasUpload, setHasUpload] = useState<boolean>(false);
+    const [hasMint, setHasMint] = useState<boolean>(false);
+    const [hasSuccess, setHasSuccess] = useState<boolean>(false);
+
     const router = useRouter();
+    const { chain } = useNetwork();
+    const { address } = useAccount();
+
+
+    const { config: contractWriteConfig } = usePrepareContractWrite({
+        addressOrName: process.env.NEXT_PUBLIC_contract_ADDRESS || "",
+        contractInterface: futurepoap_abi,
+        functionName: 'createEvent',
+        args: [tokenURI],
+    });
+
+    const { data: mintData,
+        write: createEventOnchain,
+        isLoading: isMintLoading,
+        isSuccess: isMintStarted,
+        error: mintError
+    } = useContractWrite(contractWriteConfig);
+
+    const {
+        data: txData,
+        isSuccess: txSuccess,
+        error: txError,
+    } = useWaitForTransaction({
+        hash: mintData?.hash,
+    });
 
     useEffect(() => {
-        if (eventId !== 0) {
-            router.push(`/events/${eventId}`);
+        if (tokenURI && !hasMint && createEventOnchain) {
+            setHasMint(true);
+            createEventOnchain?.();
         }
-    }, [eventId, router]);
+    }, [tokenURI, hasMint, createEventOnchain]);
+    useEffect(() => {
+        // reset everything when error, only when 
+        if (mintError || txError) {
+            console.log("Trigger reset");
+            setHasMint(false);
+            setTokenURI("");
+        }
+    }, [mintError, txError]);
+    useEffect(() => {
+        if (txSuccess) {
+            alert("Create successfully");
+            router.push("/");
+        }
+    }, [txSuccess, router]);
+
+    const showWaiting = (loading || isMintLoading || isMintStarted) && !mintError;
 
     const sendJSONtoIPFS = async (ImgHash: string) => {
         try {
@@ -35,15 +92,13 @@ const EventForm = () => {
             });
 
             const tokenURI = `ipfs://${resJSON.data.IpfsHash}`;
-            console.log("Token URI", tokenURI);
-            // mintNFT(tokenURI, currentAccount)   // pass the winner
+            return tokenURI;
 
         } catch (error) {
             console.log("JSON to IPFS: ")
             console.log(error);
         }
-
-
+        return "";
     }
     const sendFileToIPFS = async () => {
 
@@ -65,22 +120,35 @@ const EventForm = () => {
                 });
 
                 const ImgHash = `ipfs://${resFile.data.IpfsHash}`;
-                console.log(ImgHash);
                 //Take a look at your Pinata Pinned section, you will see a new file added to you list.
-                sendJSONtoIPFS(ImgHash);
+                const tokenURI = await sendJSONtoIPFS(ImgHash);
+                return tokenURI;
 
             } catch (error) {
                 console.log("Error sending File to IPFS: ")
                 console.log(error)
             }
         }
+        return "";
+    }
+
+    const fakeOne = async () => {
+        return "ipfs://QmUkJRZBP4RN1QAv3LephaKvVUqhEDKk7ZSK69BkuaShLP";
     }
 
     const handleOnSubmit = async (event: FormEvent<HTMLFormElement>) => {
         setLoading(true);
         event.preventDefault();
-        // await new Promise(f => setTimeout(f, 50000));
-        await sendFileToIPFS();
+        var tokenURIIpfs: string = tokenURI;
+        if (!hasUpload) {
+            tokenURIIpfs = (await sendFileToIPFS());
+            // tokenURIIpfs = "ipfs://QmUkJRZBP4RN1QAv3LephaKvVUqhEDKk7ZSK69BkuaShLP";
+
+        }
+        if ((tokenURIIpfs !== "") && !hasUpload) {
+            setHasUpload(true);
+        }
+        setTokenURI(tokenURIIpfs);
         setLoading(false);
     }
 
@@ -90,11 +158,11 @@ const EventForm = () => {
             <form onSubmit={handleOnSubmit}>
                 <div className="flex items-center justify-center">
                     {selectedImage && (
-                        <div>
-                            <div className="flex items-center justify-center">
-                                <img className="rounded-full border-2 border-gray-300" alt="not fount" width={"150px"} src={URL.createObjectURL(selectedImage)} />
-
-                            </div>
+                        <div className="flex items-center justify-center w-full">
+                            <img className="rounded-full border-2 border-gray-300" alt="not fount" width={"150px"} src={URL.createObjectURL(selectedImage)} />
+                            {/* <button className="" onClick={(event) => {
+                                setSelectedImage(null);
+                            }}></button> */}
                         </div>
                     )}
                     {!selectedImage && (<div>
@@ -121,20 +189,30 @@ const EventForm = () => {
                 </div>
                 <br />
                 <div className="relative z-0 mb-6 w-full group">
-                    <input defaultValue="" onChange={(event) => {
+                    <input defaultValue="" disabled={hasUpload} onChange={(event) => {
                         setEventName(event.target.value);
                     }} className="block py-2.5 px-0 w-full text-2l text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                     <label htmlFor="floating_email" className="peer-focus:font-medium absolute text-2l text-gray-700 dark:text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Event Name</label>
                 </div>
 
                 <div className="flex items-center justify-center">
-                    {loading && <div className="spinner">
+                    {showWaiting && <div className="flex space-x-1">
                         <BounceLoader
                             color={'#2C4565'}
                             loading={true}
+                            size={40}
                         />
+                        <p className="text-l text-gray-500 dark:text-gray-400 mt-2">
+                            {isMintLoading && 'Waiting for approval'}
+                            {isMintStarted && 'Minting...'}
+                            {!isMintLoading && !isMintStarted && 'Upload to IPFS'}
+                        </p>
                     </div>}
-                    {!loading && <button type="submit" className="justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>}
+                    {!showWaiting && <button type="submit" className="justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        {mintError && ("Error, re-submit")}
+                        {!mintError && ("Submit")}
+                    </button>
+                    }
                 </div>
             </form>
         </div>
