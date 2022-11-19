@@ -64,7 +64,6 @@ const CollectionCard = ({ poapIndex }: CollectionCardProps) => {
       }
     ]
   })
-  console.log("Id", eventId);
   useEffect(() => {
     async function fetchJSON() {
       const [eventJSON, getIPFSError] = (await fetchIPFSJSON(((indexEvent as Result[])[3]).toString())) as [EventJSONData, Boolean];

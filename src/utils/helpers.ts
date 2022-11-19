@@ -5,7 +5,7 @@ export const getRandomNumber = (min = 0, max = 2) =>
 
 
 export const fetchIPFSJSON = async (ipfsURI: string) => {
-  const pinataGate = "https://gateway.pinata.cloud/ipfs/";
+  const pinataGate = "https://ivory-elderly-raccoon-22.mypinata.cloud/ipfs/";
   if (!ipfsURI.startsWith("ipfs://")) {
     return {};
   }
@@ -17,10 +17,6 @@ export const fetchIPFSJSON = async (ipfsURI: string) => {
       method: "get",
       url: ipfsHttps,
       headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
-        'Access-Control-Allow-Credentials': true
       },
       responseType: 'json'
     });
@@ -40,7 +36,7 @@ export const fetchIPFSJSON = async (ipfsURI: string) => {
 };
 
 export const getIPFSImage = (ipfsURI: string) => {
-  const pinataGate = "https://gateway.pinata.cloud/ipfs/";
+  const pinataGate = "https://ivory-elderly-raccoon-22.mypinata.cloud/ipfs/";
   if (!ipfsURI.startsWith("ipfs://")) {
     return {};
   }

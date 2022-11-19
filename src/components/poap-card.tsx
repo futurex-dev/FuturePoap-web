@@ -61,11 +61,11 @@ const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
   }, [eventURI, eventError, eventLoading, indexEvent])
 
   return (
-    <div className="border-solid border-2 border-black-opaque bg-black-opaque w-[150px] rounded-md pb-6">
+    <div className="border-solid border-2 border-black-opaque bg-black-opaque w-[200px] rounded-md pb-6">
       {showToken &&
         <div>
           <div className="flex items-center justify-center w-full mt-5">
-            {!avatarEmoji && <img alt={eventName} src={eventImage} className="rounded-full border-2 border-gray-300 w-[100px]" />}
+            {!avatarEmoji && <img alt={eventName} src={eventImage} className="rounded-full border-2 border-gray-300 w-32 h-32" />}
             {avatarEmoji &&
               <div className={`flex items-center justify-center w-32 h-32 rounded-full border-2 border-gray-300 bg-[#ff9a23]`}>
                 <p className="text-5xl">{avatarEmoji}</p>
@@ -74,7 +74,7 @@ const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
           <div className="flex flex-col gap-4 mt-4 px-4">
             <div>
               <p className="font-medium mb-1 text-gray-500 text-base">Event</p>
-              <p className="font-semibold text-white text-l">{eventName}</p>
+              <p className="font-semibold text-white text-l break-words">{eventName}</p>
             </div>
 
             <button
