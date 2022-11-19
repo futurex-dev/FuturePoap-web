@@ -11,6 +11,7 @@ import { Result } from "ethers/lib/utils";
 
 
 const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
+  const [tokenIndex, setTokenIndex] = useState(0);
   const [eventName, setEventName] = useState("");
   const [eventImage, setEventImage] = useState("");
   const [avatarEmoji, setAvatarEmoji] = useState("");
@@ -42,7 +43,19 @@ const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
     ...callingURI,
   })
 
-  const showToken = !readLoading && !readError && !eventError && !eventLoading && eventName && eventImage;
+  const callingToken = {
+    addressOrName: process.env.NEXT_PUBLIC_contract_ADDRESS || "",
+    contractInterface: futurepoap_abi,
+    functionName: "tokenOfOwnerByIndex",
+    args: [userAccount, poapIndex]
+  }
+
+  const { data: tokenID, error: tokenError, isLoading: tokenLoading } = useContractRead({
+    ...callingToken,
+  })
+
+  const showToken = !readLoading && !readError && !eventError && !eventLoading && !tokenLoading && !tokenError && eventName && eventImage;
+  console.log("Token is", tokenID);
   useEffect(() => {
     async function fetchJSON() {
       const [eventJSON, getIPFSError] = (await fetchIPFSJSON((eventURI as Result).toString())) as [EventJSONData, Boolean];
@@ -59,6 +72,12 @@ const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
       fetchJSON();
     }
   }, [eventURI, eventError, eventLoading, indexEvent])
+
+  useEffect(() => {
+    if (!tokenLoading && !tokenError && tokenID) {
+      setTokenIndex((tokenID as Result).toNumber());
+    }
+  }, [tokenID, tokenError, tokenLoading])
 
   return (
     <div className="border-solid border-2 border-black-opaque bg-black-opaque w-[200px] rounded-md pb-6">
@@ -77,6 +96,7 @@ const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
               <p className="font-semibold text-white text-l break-words">{eventName}</p>
             </div>
 
+            <a className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-700 rounded" href={`https://testnets.opensea.io/assets/goerli/${process.env.NEXT_PUBLIC_contract_ADDRESS}/${tokenIndex}`}>View NFT</a>
             <button
               className="bg-blue-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-red-700 rounded"
               onClick={handleBurnButtonClick}
