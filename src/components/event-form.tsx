@@ -141,8 +141,8 @@ const EventForm = () => {
         event.preventDefault();
         var tokenURIIpfs: string = tokenURI;
         if (!hasUpload) {
-            tokenURIIpfs = (await sendFileToIPFS());
-            // tokenURIIpfs = "ipfs://QmUkJRZBP4RN1QAv3LephaKvVUqhEDKk7ZSK69BkuaShLP";
+            // tokenURIIpfs = (await sendFileToIPFS());
+            tokenURIIpfs = "ipfs://TESTURI";
 
         }
         if ((tokenURIIpfs !== "") && !hasUpload) {
