@@ -64,3 +64,5 @@ export const wagmiClient = createClient({
   provider,
   webSocketProvider,
 });
+
+export const defaultIcon = "https://avatars.githubusercontent.com/u/6250754?s=200&v=4";
