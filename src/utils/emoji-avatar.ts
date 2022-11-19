@@ -80,3 +80,10 @@ export function emojiAvatarForAddress(address: string) {
     );
     return avatars[avatarIndex ?? 0];
 }
+
+export function emojiAvatarForEvent(event: number) {
+    const avatarIndex = Math.abs(
+        event % avatars.length
+    );
+    return avatars[avatarIndex ?? 0];
+}

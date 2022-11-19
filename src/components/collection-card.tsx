@@ -6,13 +6,16 @@ import { BounceLoader } from 'react-spinners';
 import { futurepoap_abi } from "../../futurepoap";
 import { CollectionCardProps, EventJSONData } from "../utils/types"
 import { fetchIPFSJSON, getIPFSImage } from "../utils/helpers";
+import { defaultIcon } from "../utils/web3";
 import { Result } from "ethers/lib/utils";
+import { emojiAvatarForEvent } from "../utils/emoji-avatar";
 
 const CollectionCard = ({ poapIndex }: CollectionCardProps) => {
   const router = useRouter();
   const [eventId, setEventId] = useState(0);
   const [eventName, setEventName] = useState("");
   const [eventImage, setEventImage] = useState("");
+  const [avatarEmoji, setAvatarEmoji] = useState("");
   const [eventInfo, setEventInfo] = useState({
     holders: 0,
     authorized: false,
@@ -64,7 +67,13 @@ const CollectionCard = ({ poapIndex }: CollectionCardProps) => {
   console.log("Id", eventId);
   useEffect(() => {
     async function fetchJSON() {
-      const eventJSON = (await fetchIPFSJSON(((indexEvent as Result[])[3]).toString())) as EventJSONData;
+      const [eventJSON, getIPFSError] = (await fetchIPFSJSON(((indexEvent as Result[])[3]).toString())) as [EventJSONData, Boolean];
+      if (getIPFSError) {
+        setEventName(`[${eventId}]`);
+        setEventImage(defaultIcon);
+        setAvatarEmoji(emojiAvatarForEvent(eventId).emoji);
+        return;
+      }
       setEventName(eventJSON.data.name as string);
       setEventImage(getIPFSImage(eventJSON.data.image as string) as string);
     }
@@ -82,10 +91,10 @@ const CollectionCard = ({ poapIndex }: CollectionCardProps) => {
     router.push(`/events/${eventId}`);
   };
 
-  const showToken = !readLoading && !readError && indexEvent && eventId;
+  const showToken = !readLoading && !readError && indexEvent && eventId && eventName && eventImage;
   return (
     <div className="bg-black-opaque w-[60vw] min-w-[300px] max-w-[900px] rounded-md p-5">
-      {!showToken && <div className="flex items-center justify-center mt-5">
+      {!showToken && <div className="flex items-center justify-center mt-4">
         <BounceLoader
           color={'#2C4565'}
           loading={true}
@@ -98,7 +107,11 @@ const CollectionCard = ({ poapIndex }: CollectionCardProps) => {
           <div className="bg-teal-500 h-[2px] mt-[6px] w-full" />
           <section className="flex justify-between mt-4 mb-8">
             <div>
-              <img alt={eventName} src={eventImage} className="h-16" />
+              {!avatarEmoji && <img alt={eventName} src={eventImage} className="h-16 rounded-full border-2 border-gray-300" />}
+              {avatarEmoji &&
+                <div className={`flex items-center justify-center h-16 w-16 rounded-full border-2 border-gray-300 bg-[#ff9a23]`}>
+                  <p className="text-5xl">{avatarEmoji}</p>
+                </div>}
             </div>
             <div>
               <p className="font-medium mb-1 text-gray-500 text-base">Creator</p>

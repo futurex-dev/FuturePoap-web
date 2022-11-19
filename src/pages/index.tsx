@@ -14,7 +14,7 @@ import { Result } from "ethers/lib/utils";
 
 const Home: NextPage = () => {
   const { isConnected, address } = useAccount();
-  const [balance, setBalance] = useState(1);
+  const [balance, setBalance] = useState(0);
   const { chain } = useNetwork();
   const router = useRouter();
   const futurepoapConfig = {
@@ -26,7 +26,7 @@ const Home: NextPage = () => {
     functionName: 'balanceOf',
     args: [address as string]
   })
-  console.log("Balance", poapBalance);
+
   const handleNewEventButtonClick = () => {
     router.push("events/new");
   };
@@ -35,12 +35,11 @@ const Home: NextPage = () => {
   const loading = balanceLoading;
   const waiting = balanceLoading || erroring;
   const indexArray = Array.from({ length: balance }, (item, index) => index);
-  // useEffect(() => {
-  //   if (!balanceError && !balanceLoading && poapBalance) {
-  //     setBalance((poapBalance as Result).toNumber());
-  //   }
-  // }, [poapBalance, balanceError, balanceLoading]);
-  // setBalance(2);
+  useEffect(() => {
+    if (!balanceError && !balanceLoading && poapBalance) {
+      setBalance((poapBalance as Result).toNumber());
+    }
+  }, [poapBalance, balanceError, balanceLoading]);
   if (!isConnected) {
     return (
       <div className="public-content">

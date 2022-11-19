@@ -22,7 +22,7 @@
 }
 
 .button-outlined {
-  @apply border border-white bg-transparent text-base font-bold text-white uppercase px-6 py-2 w-52 tracking-wider hover:opacity-75;
+  @apply border border-white bg-transparent text-base font-bold text-white px-2 py-2 w-32 tracking-wider hover:opacity-75;
 }
 
 .button-outlined-half {

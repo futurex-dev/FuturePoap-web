@@ -5,12 +5,15 @@ import { PoapCardProps, EventJSONData } from "../utils/types";
 import { fetchIPFSJSON, getIPFSImage } from "../utils/helpers";
 import { futurepoap_abi } from "../../futurepoap";
 import { useContractRead, useAccount } from "wagmi";
+import { defaultIcon } from "../utils/web3";
+import { emojiAvatarForEvent } from "../utils/emoji-avatar";
 import { Result } from "ethers/lib/utils";
 
 
 const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
   const [eventName, setEventName] = useState("");
   const [eventImage, setEventImage] = useState("");
+  const [avatarEmoji, setAvatarEmoji] = useState("");
 
   const handleBurnButtonClick = () => {
     alert("Burn not already yet");
@@ -39,24 +42,34 @@ const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
     ...callingURI,
   })
 
-  const showToken = !readLoading && !readError && !eventError && !eventLoading;
+  const showToken = !readLoading && !readError && !eventError && !eventLoading && eventName && eventImage;
   useEffect(() => {
     async function fetchJSON() {
-      const eventJSON = (await fetchIPFSJSON((eventURI as Result).toString())) as EventJSONData;
+      const [eventJSON, getIPFSError] = (await fetchIPFSJSON((eventURI as Result).toString())) as [EventJSONData, Boolean];
+      if (getIPFSError) {
+        setEventName(`[${indexEvent}]`);
+        setEventImage(defaultIcon);
+        setAvatarEmoji(emojiAvatarForEvent((indexEvent as Result).toNumber()).emoji);
+        return;
+      }
       setEventName(eventJSON.data.name as string);
       setEventImage(getIPFSImage(eventJSON.data.image as string) as string);
     }
     if (!eventError && !eventLoading && eventURI) {
       fetchJSON();
     }
-  }, [eventURI, eventError, eventLoading])
+  }, [eventURI, eventError, eventLoading, indexEvent])
 
   return (
-    <div className="border-solid border-2 border-black-opaque bg-black-opaque w-[200px] rounded-md pb-6">
+    <div className="border-solid border-2 border-black-opaque bg-black-opaque w-[150px] rounded-md pb-6">
       {showToken &&
         <div>
           <div className="flex items-center justify-center w-full mt-5">
-            <img alt={eventName} src={eventImage} className="rounded-full border-2 border-gray-300 w-[150px]" />
+            {!avatarEmoji && <img alt={eventName} src={eventImage} className="rounded-full border-2 border-gray-300 w-[100px]" />}
+            {avatarEmoji &&
+              <div className={`flex items-center justify-center w-32 h-32 rounded-full border-2 border-gray-300 bg-[#ff9a23]`}>
+                <p className="text-5xl">{avatarEmoji}</p>
+              </div>}
           </div>
           <div className="flex flex-col gap-4 mt-4 px-4">
             <div>

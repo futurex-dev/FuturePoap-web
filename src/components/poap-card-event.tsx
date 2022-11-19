@@ -8,10 +8,12 @@ import { useContractRead, useAccount } from "wagmi";
 import { Result } from "ethers/lib/utils";
 
 const PoapCardEvent = ({ eventId, poapIndex }: PoapCardEventProps) => {
-    const [isMinted, setIsMinted] = useState(false);
-    const [userAvatar, setUserAvatar] = useState({});
-    const handleMintButtonClick = () => {
-        setIsMinted(true);
+    const [userAvatar, setUserAvatar] = useState({
+        color: "",
+        emoji: ""
+    });
+    const handleBurnButtonClick = () => {
+        alert("Burn is not already yet");
     };
 
     const callingObject = {
@@ -32,21 +34,25 @@ const PoapCardEvent = ({ eventId, poapIndex }: PoapCardEventProps) => {
             setUserAvatar(emojiAvatarForAddress(userAddress.toString()));
         }
     }, [userAddress, readError, readLoading])
-    console.log(userAvatar)
     return (
-        <div className="border-solid border-2 border-black-opaque bg-black-opaque w-[160px] rounded-md pb-6">
+        <div className="border-solid border-2 border-black-opaque bg-black-opaque w-[200px] rounded-md pb-6">
             {showToken &&
                 <div>
                     {/* <img alt={name} src={awsUrl} /> */}
-                    <div className="flex flex-col gap-4 mt-4 px-4">
+                    <div className="flex items-center justify-center mt-5">
+                        <div className={`flex items-center justify-center h-[150px] w-[150px] rounded-full border-2 border-gray-300 bg-[#ff6780]`}>
+                            <p className="text-8xl">{userAvatar.emoji}</p>
+                        </div>
+                    </div>
+                    <div className="flex flex-col gap-4 mt-4 px-4 ">
                         <div>
                             <p className="font-medium mb-1 text-gray-500 text-base">Address</p>
-                            <p className="font-semibold text-white text-2xl">{(userAddress as Result).toNumber()}</p>
+                            <p className="font-light text-gray-600 text-sm break-words">{(userAddress as Result).toString()}</p>
                         </div>
 
                         <button
                             className="bg-blue-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-red-700 rounded"
-                            onClick={handleMintButtonClick}
+                            onClick={handleBurnButtonClick}
                         >
                             Burn
                         </button>
