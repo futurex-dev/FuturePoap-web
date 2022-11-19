@@ -154,7 +154,7 @@ const Collection: NextPage = () => {
           / {eventName}{" "}
         </p>
         <div className="flex space-x-4">
-          <button className="rounded-md button-outlined focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800" onClick={() => { setModalFormOpen(true) }} >Pop Poap!</button>
+          {eventInfo.minter && <button className="rounded-md button-outlined focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800" onClick={() => { setModalFormOpen(true) }} >Pop Poap!</button>}
           {eventInfo.creator && (<button className="rounded-md button-outlined focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800" onClick={() => { setModalMinterFormOpen(true) }} >Edit minters</button>)}
         </div>
       </header>
