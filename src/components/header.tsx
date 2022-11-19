@@ -8,7 +8,7 @@ export const Header = () => {
 
   return (
     <header className="flex items-center justify-between px-16 pt-7">
-      <a href="https://futurex.dev/" className="font-bold text-center text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-700"> FutureX Project</a>
+      <a href="https://github.com/futurex-dev" className="font-bold text-center text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-700"> FutureX Project</a>
       {isMounted && (
         <ConnectButton label="Sign in" />
       )}
