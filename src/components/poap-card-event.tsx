@@ -35,12 +35,12 @@ const PoapCardEvent = ({ eventId, poapIndex }: PoapCardEventProps) => {
         }
     }, [userAddress, readError, readLoading])
     return (
-        <div className="border-solid border-2 border-black-opaque bg-black-opaque w-[200px] rounded-md pb-6">
+        <div className="border-solid border-2 border-black-opaque bg-black-opaque h-[280px] w-[150px] rounded-md pb-6">
             {showToken &&
                 <div>
                     {/* <img alt={name} src={awsUrl} /> */}
                     <div className="flex items-center justify-center mt-5">
-                        <div className={`flex items-center justify-center h-[150px] w-[150px] rounded-full border-2 border-gray-300 bg-[#ff6780]`}>
+                        <div className={`flex items-center justify-center h-[120px] w-[120px] rounded-full border-2 border-gray-300 bg-[#ff6780]`}>
                             <p className="text-8xl">{userAvatar.emoji}</p>
                         </div>
                     </div>

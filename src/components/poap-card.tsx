@@ -80,7 +80,7 @@ const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
   }, [tokenID, tokenError, tokenLoading])
 
   return (
-    <div className="border-solid border-2 border-black-opaque bg-black-opaque w-[200px] rounded-md pb-6">
+    <div className="border-solid border-2 border-black-opaque bg-black-opaque w-[220px] rounded-md pb-6">
       {showToken &&
         <div>
           <div className="flex items-center justify-center w-full mt-5">

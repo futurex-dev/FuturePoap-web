@@ -159,8 +159,8 @@ const Collection: NextPage = () => {
         </div>
       </header>
       <div className="flex items-center justify-center">
-        {!avatarEmoji && <img alt={eventName} src={eventImage} className="h-32 rounded-full border-2 border-gray-300" />}
-        {avatarEmoji && <div className={`flex items-center justify-center h-32 w-32 rounded-full border-2 border-gray-300 bg-[#ff9a23]`}>
+        {!avatarEmoji && <img alt={eventName} src={eventImage} className="h-[250px] rounded-full border-2 border-gray-300" />}
+        {avatarEmoji && <div className={`flex items-center justify-center h-[250px] w-[250px] rounded-full border-2 border-gray-300 bg-[#ff9a23]`}>
           <p className="text-5xl">{avatarEmoji}</p>
         </div>}
       </div>
