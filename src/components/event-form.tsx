@@ -61,7 +61,6 @@ const EventForm = () => {
     useEffect(() => {
         // reset everything when error, only when 
         if (mintError || txError) {
-            console.log("Trigger reset");
             setHasMint(false);
             setTokenURI("");
         }

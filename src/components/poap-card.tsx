@@ -84,7 +84,6 @@ const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
   })
 
   const showToken = !readLoading && !readError && !eventError && !eventLoading && !tokenLoading && !tokenError && eventName && eventImage;
-  console.log("Token is", tokenID);
   useEffect(() => {
     async function fetchJSON() {
       const [eventJSON, getIPFSError] = (await fetchIPFSJSON((eventURI as Result).toString())) as [EventJSONData, Boolean];

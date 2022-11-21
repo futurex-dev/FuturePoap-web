@@ -78,7 +78,6 @@ const CollectionCard = ({ poapIndex }: CollectionCardProps) => {
     }
     if (eventId && !readLoading && !readError && indexEvent) {
       fetchJSON();
-      // console.log("Here", readLoading, readError, indexEvent);
       setEventInfo({
         holders: indexEvent[0].toNumber(),
         creator: Boolean(indexEvent[1]),

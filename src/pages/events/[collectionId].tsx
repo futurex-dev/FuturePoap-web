@@ -248,7 +248,7 @@ const Collection: NextPage = () => {
   const indexArray = Array.from({ length: eventInfo.holders }, (item, index) => index);
   const mintWaiting = (modalFormLoading || isMintLoading) && !mintError;
   const minterWaiting = (modalMinterFormLoading || isAddMinterLoading || isRmMinterLoading) && !addMinterError && !rmMinterError;
-  console.log(minterWaiting, modalMinterFormLoading, isAddMinterLoading, isAddMinterStarted, isRmMinterLoading, isRmMinterStarted, !addMinterError, !rmMinterError)
+
   return (
     <main className="flex flex-col items-center justify-center mt-16 w-full">
       <header className="flex items-center justify-between mb-12 px-16 pt-7 w-full">
