@@ -1,28 +1,58 @@
 /* eslint-disable @next/next/no-img-element */
+import { useRouter } from "next/router";
 import { useMemo, useState, useEffect } from "react";
 import { BounceLoader } from 'react-spinners';
 import { PoapCardProps, EventJSONData } from "../utils/types";
 import { fetchIPFSJSON, getIPFSImage } from "../utils/helpers";
 import { futurepoap_abi } from "../../futurepoap";
-import { useContractRead, useAccount } from "wagmi";
+import {
+  useContractRead, useAccount, useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction
+} from "wagmi";
 import { defaultIcon } from "../utils/web3";
 import { emojiAvatarForEvent } from "../utils/emoji-avatar";
 import { Result } from "ethers/lib/utils";
+import Router from "next/router";
 
 
 const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
+  const router = useRouter();
   const [tokenIndex, setTokenIndex] = useState(0);
   const [eventName, setEventName] = useState("");
   const [eventImage, setEventImage] = useState("");
   const [avatarEmoji, setAvatarEmoji] = useState("");
 
-  const handleBurnButtonClick = () => {
-    alert("Burn not already yet");
+  const futurepoapConfig = {
+    addressOrName: process.env.NEXT_PUBLIC_contract_ADDRESS || "",
+    contractInterface: futurepoap_abi
   };
 
+  // // burn poaps ------------------------------------------------
+  const { config: mintWriteConfig } = usePrepareContractWrite({
+    ...futurepoapConfig,
+    functionName: 'burn',
+    args: [tokenIndex],
+  });
+
+  const { data: burnData,
+    write: burnPoap,
+    isLoading: isBurnLoading,
+    isSuccess: isBurnStarted,
+    error: burnError
+  } = useContractWrite(mintWriteConfig);
+
+  const {
+    data: txBurnData,
+    isSuccess: txBurnSuccess,
+    error: txBurnError,
+  } = useWaitForTransaction({
+    hash: burnData?.hash,
+  });
+  // -----------------
+
   const callingEvent = {
-    addressOrName: process.env.NEXT_PUBLIC_contract_ADDRESS || "",
-    contractInterface: futurepoap_abi,
+    ...futurepoapConfig,
     functionName: "eventOfOwnerByIndex",
     args: [userAccount, poapIndex]
   }
@@ -33,8 +63,7 @@ const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
   })
 
   const callingURI = {
-    addressOrName: process.env.NEXT_PUBLIC_contract_ADDRESS || "",
-    contractInterface: futurepoap_abi,
+    ...futurepoapConfig,
     functionName: "eventMetaURI",
     args: [indexEvent]
   }
@@ -79,6 +108,17 @@ const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
     }
   }, [tokenID, tokenError, tokenLoading])
 
+  useEffect(() => {
+    if (txBurnSuccess) {
+      alert("Burn successfully");
+    }
+  }, [txBurnSuccess])
+
+  const handleBurnButtonClick = () => {
+    alert("You will burn your POAP");
+    burnPoap?.();
+  };
+
   return (
     <div className="border-solid border-2 border-black-opaque bg-black-opaque w-[220px] rounded-md pb-6">
       {showToken &&
@@ -97,12 +137,22 @@ const PoapCard = ({ userAccount, poapIndex }: PoapCardProps) => {
             </div>
 
             <a className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-700 rounded" href={`https://testnets.opensea.io/assets/goerli/${process.env.NEXT_PUBLIC_contract_ADDRESS}/${tokenIndex}`}>View NFT</a>
-            <button
-              className="bg-blue-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-red-700 rounded"
-              onClick={handleBurnButtonClick}
-            >
-              Burn
-            </button>
+            {!isBurnLoading &&
+              <button
+                className="bg-blue-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-red-700 rounded"
+                onClick={handleBurnButtonClick}
+              >
+                Burn
+              </button>}
+            {isBurnLoading &&
+              <div className="flex items-center justify-center mt-5">
+                <BounceLoader
+                  color={'#2C4565'}
+                  loading={true}
+                  size={40}
+                />
+              </div>
+            }
           </div>
         </div>
       }

@@ -2,7 +2,7 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, FormEvent, useState } from "react";
+import { useEffect, FormEvent, useState, MouseEvent } from "react";
 import { useAccount, useContractRead, useContractReads, usePrepareContractWrite, useContractWrite, useWaitForTransaction } from "wagmi";
 import { futurepoap_abi } from "../../../futurepoap";
 import { Result } from "ethers/lib/utils";
@@ -24,7 +24,10 @@ const Collection: NextPage = () => {
   const [newPoapAddress, setNewPoapAddress] = useState("");
   const [modalFormOpen, setModalFormOpen] = useState(false);
   const [modalFormLoading, setModalFormLoading] = useState(false);
+
   const [minterAddress, setMinterAddress] = useState("");
+  const [waitForMinter, setWaitForMinter] = useState(false);
+  const [minterAction, setMinterAction] = useState(0); // 1 for remove, 2 for add
   const [modalMinterFormOpen, setModalMinterFormOpen] = useState(false);
   const [modalMinterFormLoading, setModalMinterFormLoading] = useState(false);
   const [avatarEmoji, setAvatarEmoji] = useState("");
@@ -43,6 +46,7 @@ const Collection: NextPage = () => {
     contractInterface: futurepoap_abi
   };
 
+  // write poaps ------------------------------------------------
   const { config: mintWriteConfig } = usePrepareContractWrite({
     ...futurepoapConfig,
     functionName: 'mintToken',
@@ -64,14 +68,54 @@ const Collection: NextPage = () => {
     hash: mintData?.hash,
   });
 
+  // write minters ------------------------------------------------
+  const { config: addMinterWriteConfig } = usePrepareContractWrite({
+    ...futurepoapConfig,
+    functionName: 'addEventMinter',
+    args: [eventId, minterAddress],
+  });
+
+  const { data: addMinterData,
+    write: addMinter,
+    isLoading: isAddMinterLoading,
+    isSuccess: isAddMinterStarted,
+    error: addMinterError
+  } = useContractWrite(addMinterWriteConfig);
+
+  const {
+    isSuccess: txAddMintSuccess,
+    error: txAddMintError,
+  } = useWaitForTransaction({
+    hash: addMinterData?.hash,
+  });
+  // remove minters ------------------------------------------------
+  const { config: rmMinterWriteConfig } = usePrepareContractWrite({
+    ...futurepoapConfig,
+    functionName: 'removeEventMinter',
+    args: [eventId, minterAddress],
+  });
+
+  const { data: rmMinterData,
+    write: rmMinter,
+    isLoading: isRmMinterLoading,
+    isSuccess: isRmMinterStarted,
+    error: rmMinterError
+  } = useContractWrite(rmMinterWriteConfig);
+
+  const {
+    isSuccess: txRmMintSuccess,
+    error: txRmMintError,
+  } = useWaitForTransaction({
+    hash: rmMinterData?.hash,
+  });
+
+
   const handleMintOnSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setModalFormLoading(true);
     event.preventDefault();
     mintPoap?.();
     setModalFormLoading(false);
   }
-
-
 
   const { data: indexEvent, error: readError, isLoading: readLoading } = useContractReads({
     contracts: [
@@ -101,7 +145,19 @@ const Collection: NextPage = () => {
         args: [eventId]
       }
     ]
+  });
+
+  const { data: ifMinter, error: ifMinterError, isLoading: ifMinterLoading } = useContractRead({
+    ...futurepoapConfig,
+    functionName: "isEventMinter",
+    args: [eventId, minterAddress]
   })
+
+  // const { data: ifUser, error: ifUserError, isLoading: ifUserLoading } = useContractRead({
+  //   ...futurepoapConfig,
+  //   functionName: "eventHasUser",
+  //   args: [eventId, newPoapAddress]
+  // })
 
   useEffect(() => {
     async function fetchJSON() {
@@ -138,10 +194,61 @@ const Collection: NextPage = () => {
     }
   }, [txMintSuccess])
 
+  useEffect(() => {
+    if (txAddMintSuccess) {
+      alert("Add minter successfully");
+      setModalMinterFormOpen(false);
+    }
+  }, [txAddMintSuccess])
+
+  useEffect(() => {
+    if (txRmMintSuccess) {
+      alert("Remove minter successfully");
+      setModalMinterFormOpen(false);
+    }
+  }, [txRmMintSuccess])
+
+  useEffect(() => {
+    if (waitForMinter && !ifMinterError && !ifMinterLoading && minterAction && (ifMinter !== undefined)) {
+      if (minterAction === 1) {
+        if (!Boolean(ifMinter)) {
+          alert("User is not a minter, no need to remove");
+          setModalMinterFormOpen(false);
+          setModalMinterFormLoading(false);
+        } else {
+          rmMinter?.();
+          setModalMinterFormLoading(false);
+        }
+      } else if (minterAction === 2) {
+        if (Boolean(ifMinter)) {
+          alert("User is already a minter, no need to add");
+          setModalMinterFormOpen(false);
+          setModalMinterFormLoading(false);
+        } else {
+          addMinter?.();
+          setModalMinterFormLoading(false);
+        }
+      } else {
+        console.log("Error with unknown minter action", minterAction)
+      }
+      setWaitForMinter(false);
+    }
+  }, [waitForMinter, ifMinter, ifMinterError, ifMinterLoading, minterAction, rmMinter, addMinter]);
+
+  useEffect(() => {
+    if (!modalMinterFormOpen) {
+      setModalMinterFormLoading(false);
+      setMinterAction(0);
+      setWaitForMinter(false);
+      setMinterAddress("");
+    }
+  }, [modalMinterFormOpen])
   if (!isConnected) return null;
 
   const indexArray = Array.from({ length: eventInfo.holders }, (item, index) => index);
-  const mintWaiting = (modalFormLoading || isMintLoading || isMintStarted) && !mintError;
+  const mintWaiting = (modalFormLoading || isMintLoading) && !mintError;
+  const minterWaiting = (modalMinterFormLoading || isAddMinterLoading || isRmMinterLoading) && !addMinterError && !rmMinterError;
+  console.log(minterWaiting, modalMinterFormLoading, isAddMinterLoading, isAddMinterStarted, isRmMinterLoading, isRmMinterStarted, !addMinterError, !rmMinterError)
   return (
     <main className="flex flex-col items-center justify-center mt-16 w-full">
       <header className="flex items-center justify-between mb-12 px-16 pt-7 w-full">
@@ -240,10 +347,33 @@ const Collection: NextPage = () => {
                       setMinterAddress(event.target.value);
                     }} name="poapaddress" id="poapaddress" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="0x..." required />
                   </div>
-                  <div className="flex items-center justify-center space-x-4">
-                    <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Remove this minter</button>
-                    <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add this minter</button>
-                  </div>
+                  {minterWaiting &&
+                    <div className="flex space-x-1">
+                      <BounceLoader
+                        color={'#2C4565'}
+                        loading={true}
+                        size={40}
+                      />
+                      <p className="text-l text-gray-500 dark:text-gray-400 mt-2">
+                        {modalMinterFormLoading && 'Check for qualifications'}
+                        {!modalMinterFormLoading && 'Setting role...'}
+                      </p>
+                    </div>}
+                  {!minterWaiting &&
+                    <div className="flex items-center justify-center space-x-4">
+                      <button onClick={(event) => {
+                        setModalMinterFormLoading(true);
+                        setMinterAction(1);
+                        setWaitForMinter(true);
+                        event.preventDefault();
+                      }} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Remove this minter</button>
+                      <button onClick={(event) => {
+                        setModalMinterFormLoading(true);
+                        setMinterAction(2);
+                        setWaitForMinter(true);
+                        event.preventDefault();
+                      }} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add this minter</button>
+                    </div>}
                 </form>
               </div>
             </div>
